@@ -2,6 +2,9 @@ Puppet module to install the [Heroku
 Toolbelt](https://toolbelt.heroku.com) on linux. Note that this does not
 install the bundled git, forman and other tools, just the heroku client.
 
+[![Build
+Status](https://secure.travis-ci.org/garethr/garethr-heroku.png)](http://travis-ci.org/garethr/garethr-heroku)
+
 ## Usage
 
     include 'heroku'
