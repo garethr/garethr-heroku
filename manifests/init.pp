@@ -17,7 +17,7 @@ class heroku (
   }
 
   exec { 'untar_heroku_toolbelt':
-    command => "tar xz ${artifact_dir}/heroku-client.tgz",
+    command => "/bin/tar xfz ${artifact_dir}/heroku-client.tgz",
     cwd     => $install_parent_dir,
     creates => "${install_parent_dir}/heroku-client",
     before  => File[$link_dir],
