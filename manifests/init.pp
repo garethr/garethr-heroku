@@ -1,8 +1,13 @@
+# == Class: heroku
+#
+# Install the Heroku Client.
+#
 class heroku (
-  $heroku_client_url = $heroku::params::client_url,
+  $heroku_client_url  = $heroku::params::client_url,
   $install_parent_dir = $heroku::params::install_parent_dir,
-  $artifact_dir = $heroku::params::artifact_dir,
-  $link_dir = $heroku::params::link_dir
+  $artifact_dir       = $heroku::params::artifact_dir,
+  $link_dir           = $heroku::params::link_dir,
+  $shell              = $heroku::params::shell
 ) inherits heroku::params {
 
   file { $artifact_dir:
@@ -26,6 +31,13 @@ class heroku (
   file { $link_dir:
     ensure => link,
     target => "${install_parent_dir}/heroku-client",
+  }
+
+  exec { 'add_heroku_bin_to_path':
+    command => "echo 'export PATH=\"${link_dir}/bin:\$PATH\"' >> /etc/${shell}rc",
+    unless  => "grep -q 'export PATH=\"${link_dir}/bin:\$PATH\"' /etc/${shell}rc",
+    path    => ['/bin', '/usr/bin', '/usr/sbin'],
+    require => File[$link_dir],
   }
 
 }
