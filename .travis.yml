@@ -3,9 +3,18 @@ rvm:
   - 1.9.2
   - 1.9.3
   - 1.8.7
+  - 2.1.5
 script: "bundle exec rake spec"
 env:
   - PUPPET_VERSION=2.7.17
-  - PUPPET_VERSION=2.7.18
   - PUPPET_VERSION=3.0.1
   - PUPPET_VERSION=3.1.0
+  - PUPPET_VERSION=3.7.3
+matrix:
+  exclude:
+    - rvm: 2.1.5
+      env: PUPPET_VERSION=2.7.17
+    - rvm: 2.1.5
+      env: PUPPET_VERSION=3.0.1
+    - rvm: 2.1.5
+      env: PUPPET_VERSION=3.1.0

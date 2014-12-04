@@ -1,19 +1,26 @@
+# == Class: heroku
+#
+# Install the Heroku Client.
+#
 class heroku (
-  $heroku_client_url = $heroku::params::client_url,
+  $heroku_client_url  = $heroku::params::client_url,
   $install_parent_dir = $heroku::params::install_parent_dir,
-  $artifact_dir = $heroku::params::artifact_dir,
-  $link_dir = $heroku::params::link_dir
+  $artifact_dir       = $heroku::params::artifact_dir,
+  $link_dir           = $heroku::params::link_dir,
+  $shell              = $heroku::params::shell
 ) inherits heroku::params {
 
   file { $artifact_dir:
     ensure => directory,
-    before => Wget::Fetch['download_heroku_toolbelt'],
+    before => Exec['download_heroku_toolbelt'],
   }
 
-  wget::fetch { 'download_heroku_toolbelt':
-    source      => $heroku_client_url,
-    destination => "${artifact_dir}/heroku-client.tgz",
-    before      => Exec['untar_heroku_toolbelt'],
+  exec { 'download_heroku_toolbelt':
+    command => "curl -o ${artifact_dir}/heroku-client.tgz ${heroku_client_url}",
+    creates => "${artifact_dir}/heroku-client.tgz",
+    unless  => 'which heroku',
+    require => Package['curl'],
+    before  => Exec['untar_heroku_toolbelt'],
   }
 
   exec { 'untar_heroku_toolbelt':
@@ -26,6 +33,13 @@ class heroku (
   file { $link_dir:
     ensure => link,
     target => "${install_parent_dir}/heroku-client",
+  }
+
+  exec { 'add_heroku_bin_to_path':
+    command => "echo 'export PATH=\"${link_dir}/bin:\$PATH\"' >> /etc/${shell}rc",
+    unless  => "grep -q 'export PATH=\"${link_dir}/bin:\$PATH\"' /etc/${shell}rc",
+    path    => ['/bin', '/usr/bin', '/usr/sbin'],
+    require => File[$link_dir],
   }
 
 }
