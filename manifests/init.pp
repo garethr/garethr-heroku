@@ -12,15 +12,13 @@ class heroku (
 
   file { $artifact_dir:
     ensure => directory,
-    before => Exec['download_heroku_toolbelt'],
+    before => Wget::Fetch['download_heroku_toolbelt'],
   }
 
-  exec { 'download_heroku_toolbelt':
-    command => "curl -o ${artifact_dir}/heroku-client.tgz ${heroku_client_url}",
-    creates => "${artifact_dir}/heroku-client.tgz",
-    unless  => 'which heroku',
-    require => Package['curl'],
-    before  => Exec['untar_heroku_toolbelt'],
+  wget::fetch { 'download_heroku_toolbelt':
+    source      => $heroku_client_url,
+    destination => "${artifact_dir}/heroku-client.tgz",
+    before      => Exec['untar_heroku_toolbelt'],
   }
 
   exec { 'untar_heroku_toolbelt':

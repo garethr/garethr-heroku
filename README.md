@@ -26,3 +26,8 @@ class { 'heroku':
 ```
 
 The above examples show the defaults if you don't override anything.
+
+Dependencies
+------------
+
+Note that this module requires the [maestrodev/wget](http://forge.pupppetabs.com/maestrodev/wget) module which is marked as a dependency in the Modulefile.
