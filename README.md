@@ -6,7 +6,7 @@ Status](https://secure.travis-ci.org/garethr/garethr-heroku.png)](http://travis-
 Usage
 -----
 
-```
+```puppet
 include heroku
 ```
 
@@ -15,13 +15,13 @@ Configuration
 
 If you were being particularly fancy you can configure a few things, specifically the destination directory, the download directory for the tar and the URL where the client will be downloaded from.
 
-```
+```puppet
 class { 'heroku':
   heroku_client_url  => 'http://assets.heroku.com.s3.amazonaws.com/heroku-client/heroku-client.tgz',
   install_parent_dir => '/usr/local',
   artifact_dir       => '/usr/local/src/heroku',
   link_dir           => '/usr/local/heroku',
-  $shell             => 'bash'
+  shell              => 'bash'
 }
 ```
 
